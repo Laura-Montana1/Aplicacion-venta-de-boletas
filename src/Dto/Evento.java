@@ -31,23 +31,6 @@ public class Evento {
         return null;
     }
 
-    public String getInfoDisponibilidad() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(nombre).append(" (").append(fecha).append(" ").append(hora).append(") - ")
-                .append(lugar).append(" | Disponibles: ");
-        for (Zona z : zonas) {
-            sb.append(z.getNombre()).append(":").append(z.getBoletasDisponibles()).append(" ");
-        }
-        return sb.toString();
-    }
-
-    public String getNombre() { return nombre; }
-    public LocalDate getFecha() { return fecha; }
-    public LocalTime getHora() { return hora; }
-    public String getLugar() { return lugar; }
-    public String getPatrocinador() { return patrocinador; }
-    public List<Zona> getZonas() { return new ArrayList<>(zonas); }
-
-    @Override
+  @Override
     public String toString() { return "Evento{" + nombre + ", " + fecha + "}"; }
 }
