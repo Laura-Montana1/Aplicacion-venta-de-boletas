@@ -78,17 +78,6 @@ public class SistemaEventos {
         return false;
     }
 
-    // Historia de Usuario 4: Listar Compras por Usuario
-    public List<Compra> listarComprasPorUsuario(String cedula) {
-        Comprador comprador = compradoresPorCedula.get(cedula);
-        if (comprador == null) return new ArrayList<>();
 
-        List<Compra> compras = comprador.getCompras();
-        for (Compra c : compras) {
-            if (c.getEstado() == EstadoCompra.RESERVADA) c.liberarBoletasSiExpirada();
-        }
-        compras.sort((c1, c2) -> c2.getFechaCompra().compareTo(c1.getFechaCompra()));
-        return compras;
-    }
 
 
