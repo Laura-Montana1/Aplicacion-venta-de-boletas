@@ -30,4 +30,35 @@ public class SistemaEventos {
         eventos.add(evento);
     }
 
+    // Historia de Usuario 2: Reservar Boletas
+    public String reservarBoletas(String nombreEvento, String nombreZona, int cantidad,
+                                  MetodoPago metodoPago, String nombreComprador, String cedula) {
+        if (cantidad > 10 || cantidad <= 0) return "Error: Máximo 10 boletas por transacción.";
+
+        Evento evento = buscarEvento(nombreEvento);
+        if (evento == null) return "Error: Evento no encontrado.";
+
+        Zona zona = evento.getZona(nombreZona);
+        if (zona == null || !zona.hayDisponibles(cantidad))
+            return "Error: No hay suficientes boletas en la zona " + nombreZona + ".";
+
+        Comprador comprador = compradoresPorCedula.computeIfAbsent(cedula,
+                k -> new Comprador(nombreComprador, cedula));
+
+        String idCompra = "COMP-" + String.format("%06d", contadorIdCompra++);
+        LocalDateTime ahora = LocalDateTime.now();
+        // LocalDateTime limite = ahora.plusHours(configuracion.getHorasExpiracionReserva());
+        double total = zona.getPrecio() * cantidad;
+
+        Compra compra = new Compra(idCompra, ahora, EstadoCompra.RESERVADA, total, limite, metodoPago);
+        compra.setComprador(comprador);
+
+        List<Boleta> reservadas = zona.reservarBoletas(cantidad, compra);
+        compra.setBoletas(reservadas);
+        comprador.agregarCompra(compra);
+
+        return "✅ Reserva exitosa. ID: " + idCompra + " | Límite pago: " + limite;
+    }
+
+
 
