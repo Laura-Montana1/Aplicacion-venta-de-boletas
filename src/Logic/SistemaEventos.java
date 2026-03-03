@@ -9,14 +9,12 @@ import java.util.*;
 
 public class SistemaEventos {
     private List<Evento> eventos;
-    // private Map<String, Comprador> compradoresPorCedula;
-    // private Configuracion configuracion;
+    
     private int contadorIdCompra;
 
     public SistemaEventos() {
         this.eventos = new ArrayList<>();
-        // this.compradoresPorCedula = new HashMap<>();
-        // this.configuracion = new Configuracion();
+       
         this.contadorIdCompra = 1;
     }
 
