@@ -60,5 +60,35 @@ public class SistemaEventos {
         return "✅ Reserva exitosa. ID: " + idCompra + " | Límite pago: " + limite;
     }
 
+    // Historia de Usuario 3: Registrar Pago
+    public boolean registrarPago(String cedula, double montoPagado) {
+        Comprador comprador = compradoresPorCedula.get(cedula);
+        if (comprador == null) return false;
+
+        for (Compra compra : comprador.getCompras()) {
+            if (compra.getEstado() == EstadoCompra.RESERVADA) {
+                compra.liberarBoletasSiExpirada();
+                if (compra.getEstado() == EstadoCompra.EXPIRADA) continue;
+                if (Math.abs(compra.getValorTotal() - montoPagado) > 0.01) return false;
+                Pago pago = new Pago(compra.getMetodoPago(), montoPagado);
+                compra.registrarPago(pago);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // Historia de Usuario 4: Listar Compras por Usuario
+    public List<Compra> listarComprasPorUsuario(String cedula) {
+        Comprador comprador = compradoresPorCedula.get(cedula);
+        if (comprador == null) return new ArrayList<>();
+
+        List<Compra> compras = comprador.getCompras();
+        for (Compra c : compras) {
+            if (c.getEstado() == EstadoCompra.RESERVADA) c.liberarBoletasSiExpirada();
+        }
+        compras.sort((c1, c2) -> c2.getFechaCompra().compareTo(c1.getFechaCompra()));
+        return compras;
+    }
 
 
